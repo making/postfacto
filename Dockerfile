@@ -28,7 +28,7 @@
 #
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-FROM node:14.16.1 as front-end
+FROM node:14.21.3 as front-end
 
 COPY ./web /web
 WORKDIR /web
@@ -36,8 +36,8 @@ WORKDIR /web
 RUN npm ci
 RUN npm run build
 
-FROM ruby:2.7.3-alpine
-RUN gem install bundler:2.2.16
+FROM ruby:2.7.8-alpine
+RUN gem update bundler && gem update --system
 
 COPY ./api /postfacto
 COPY docker/release/entrypoint /
@@ -47,17 +47,19 @@ COPY --from=front-end /web/build /postfacto/client/
 WORKDIR /postfacto
 
 # Nokogiri dependencies
-RUN apk add --update \
+RUN apk add --update --no-cache \
   build-base \
   libxml2-dev \
   libxslt-dev
 
-RUN apk add --update \
+RUN apk add --update --no-cache \
   mariadb-dev \
   postgresql-dev \
   sqlite-dev
 
-RUN apk add --update nodejs
+RUN apk add --update --no-cache nodejs
+
+RUN apk add --update --no-cache ncurses-libs ncurses-terminfo-base
 
 RUN bundle config build.nokogiri --use-system-libraries
 RUN bundle install --without test

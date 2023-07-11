@@ -59,8 +59,8 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: "{{ .Release.Name }}-postgresql"
-                key: postgresql-password
-          command: ["sh", "-c", "for i in {1..33}; do sleep 3; if PGPASSWORD=$POSTGRESQL_PASSWORD psql -h {{ .Release.Name }}-postgresql -U {{ .Values.postgresql.postgresqlUsername }}; then exit 0; fi; done; exit 1"]
+                key: postgres-password
+          command: ["sh", "-c", "for i in {1..33}; do sleep 3; if PGPASSWORD=$POSTGRESQL_PASSWORD psql -h {{ .Release.Name }}-postgresql -U postgres; then exit 0; fi; done; exit 1"]
       containers:
         - name: {{ .Chart.Name }}
           env:
@@ -68,9 +68,9 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: "{{ .Release.Name }}-postgresql"
-                key: postgresql-password
+                key: postgres-password
           - name: DATABASE_URL
-            value: "postgres://{{ .Values.postgresql.postgresqlUsername }}:$(POSTGRESQL_PASSWORD)@{{ .Release.Name }}-postgresql"
+            value: "postgres://postgres:$(POSTGRESQL_PASSWORD)@{{ .Release.Name }}-postgresql"
           - name: SECRET_KEY_BASE
             value: {{ include "postfacto.secretKey" . }}
           - name: DISABLE_SSL_REDIRECT

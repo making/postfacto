@@ -31,7 +31,7 @@
 replicaCount: 1
 
 image:
-  repository: postfacto/postfacto
+  repository: ghcr.io/making/postfacto
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -67,8 +67,7 @@ googleOAuthClientId:
 secretKeyBase:
 
 redis:
-  cluster:
-    enabled: false
+  architecture: standalone
 
 tolerations: []
 

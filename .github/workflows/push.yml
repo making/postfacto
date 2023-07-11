@@ -167,7 +167,7 @@ jobs:
           -v "$GITHUB_WORKSPACE/deployment/helm/":/helm \
           -w /helm \
           --entrypoint /helm/build.sh \
-          alpine/helm:3.2.1 $TAG
+          alpine/helm $TAG
       env:
         TAG: ${{ steps.full_tag.outputs.VERSION }}
     - name: Package build with dependencies
